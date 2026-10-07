@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette — banner-matched black & gold */
+  --color-ink: #070707;
+  --color-charcoal: #111111;
+  --color-graphite: #181818;
+  --color-gold: #c79a2b;
+  --color-gold-light: #e0b84f;
+  --color-gold-muted: #9c7620;
+  --color-cream: #f4f1e8;
+  --color-sand: #aaa69d;
+  --color-line: #2b261b;
+
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-gold-draw: gold-draw 1.2s ease-out forwards;
+  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
+
+  @keyframes gold-draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(199, 154, 43, 0.35);
+  color: var(--color-cream);
+}
+
+/* Refined focus visibility for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Slim dark scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-muted);
+}
+
+/* Subtle technical grid pattern used behind hero / section headers */
+.tech-grid {
+  background-image:
+    linear-gradient(rgba(199, 154, 43, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(199, 154, 43, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+}
+
+/* Thin gold rule motif — subtle shimmer sweep */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold-muted),
+    var(--color-gold-light),
+    var(--color-gold-muted),
+    transparent
+  );
+  background-size: 220% 100%;
+  animation: rule-shimmer 7s linear infinite;
+}
+
+@keyframes rule-shimmer {
+  0% {
+    background-position: 220% 0;
+  }
+  100% {
+    background-position: -220% 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll-reveal system (driven by the Reveal component)               */
+/* ------------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal[data-variant="fade-up"] {
+  transform: translateY(28px);
+}
+.reveal[data-variant="fade-in"] {
+  transform: none;
+}
+.reveal[data-variant="slide-left"] {
+  transform: translateX(44px);
+}
+.reveal[data-variant="slide-right"] {
+  transform: translateX(-44px);
+}
+.reveal[data-variant="zoom"] {
+  transform: scale(0.94);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Slow float for the hero portrait */
+.animate-float {
+  animation: float-soft 7s ease-in-out infinite;
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Ambient drifting orbs */
+.orb {
+  animation: orb-drift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.orb-2 {
+  animation-duration: 32s;
+  animation-delay: -8s;
+}
+
+@keyframes orb-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(5%, 7%, 0) scale(1.1);
+  }
+}
+
+/* Film grain overlay (SVG noise, very low opacity) */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* Button hover lift + gold glow (uses the live accent variable) */
+.btn-lift {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.btn-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px
+    color-mix(in srgb, var(--color-gold) 35%, transparent);
+}
+
+/* Respect reduced motion: framer-motion also checks this via useReducedMotion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Admin "animations off" toggle: kill motion, keep content visible */
+[data-animations="off"] .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+[data-animations="off"] .animate-float,
+[data-animations="off"] .orb,
+[data-animations="off"] .gold-rule {
+  animation: none !important;
+}
+
+/* Print: never hide content behind reveal states */
+@media print {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .animate-float,
+  .orb,
+  .gold-rule {
+    animation: none !important;
+  }
+}
